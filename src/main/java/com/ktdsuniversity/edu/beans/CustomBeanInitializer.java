@@ -44,6 +44,11 @@ public class CustomBeanInitializer {
 		return fileHandler;
 	}
 	
+	@Bean
+	public SHA sha() {
+		return new SHA();
+	}
+	
 }
 
 

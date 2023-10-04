@@ -38,6 +38,57 @@
 		, SYSDATE /*REGIST_DATE*/)
     </insert>
     
+    <select id="getSalt" 
+            parameterType="string"
+            resultType="string">
+        SELECT SALT
+		  FROM MEMBERS
+		 WHERE EMAIL = #{_parameter}
+    </select>
+    
+    <select id="getMember" 
+            parameterType="com.ktdsuniversity.edu.member.vo.MemberVO"
+            resultType="com.ktdsuniversity.edu.member.vo.MemberVO">
+        SELECT EMAIL
+		     , NAME
+		     , PASSWORD
+		     , SALT
+		     , BLOCK_YN
+		     , LOGIN_CNT
+		     , LATEST_LOGIN_SUCCESS_DATE
+		     , LATEST_LOGIN_FAIL_DATE
+		     , LATEST_ACCESS_IP
+		     , TO_CHAR(REGIST_DATE, 'YYYY-MM-DD HH24:MI:SS') REGIST_DATE
+		  FROM MEMBERS
+		 WHERE EMAIL = #{email}
+		   AND PASSWORD = #{password}
+    </select>
+    
+    <update id="successLogin"
+            parameterType="com.ktdsuniversity.edu.member.vo.MemberVO">
+        UPDATE MEMBERS
+		   SET LOGIN_CNT = 0
+		     , LATEST_LOGIN_SUCCESS_DATE = SYSDATE
+		     , LATEST_ACCESS_IP = #{latestAccessIp}
+		 WHERE EMAIL = #{email}
+    </update>
+    
+    <update id="failLogin"
+            parameterType="com.ktdsuniversity.edu.member.vo.MemberVO">
+        UPDATE MEMBERS
+		   SET LOGIN_CNT = LOGIN_CNT + 1
+		     , LATEST_LOGIN_FAIL_DATE = SYSDATE
+		     , LATEST_ACCESS_IP = #{latestAccessIp}
+		 WHERE EMAIL = #{email}
+    </update>
+    
+    <update id="blockMember"
+            parameterType="string">
+        UPDATE MEMBERS
+		   SET BLOCK_YN = 'Y'
+		 WHERE EMAIL = #{_parameter}
+		   AND LOGIN_CNT >= 3
+    </update>
 </mapper>
 
 
