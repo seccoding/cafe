@@ -57,6 +57,10 @@ public class MemberServiceImpl implements MemberService {
 			throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
 		}
 		
+		if (member.getBlockYn().equalsIgnoreCase("Y")) {
+			throw new IllegalArgumentException("비밀번호가 3회이상 틀려 아이디가 차단되었습니다. 관리자에게 문의하세요.");
+		}
+		
 		memberDao.successLogin(memberVO);
 		return member;
 	}

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +16,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ktdsuniversity.edu.member.service.MemberService;
 import com.ktdsuniversity.edu.member.vo.MemberVO;
+import com.ktdsuniversity.edu.member.vo.validategroup.MemberLoginGroup;
+import com.ktdsuniversity.edu.member.vo.validategroup.MemberRegistGroup;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 public class MemberController {
@@ -32,7 +34,7 @@ public class MemberController {
 	}
 	
 	@PostMapping("/member/regist")
-	public ModelAndView doRegistMember(@Valid @ModelAttribute MemberVO memberVO
+	public ModelAndView doRegistMember(@Validated(MemberRegistGroup.class) @ModelAttribute MemberVO memberVO
 									, BindingResult bindingResult) {
 		
 		ModelAndView modelAndView = new ModelAndView();
@@ -69,8 +71,13 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("/member/login")
+	public String viewLoginPage() {
+		return "member/memberlogin";
+	}
+	
 	@PostMapping("/member/login")
-	public ModelAndView doLogin(@Valid @ModelAttribute MemberVO memberVO
+	public ModelAndView doLogin(@Validated(MemberLoginGroup.class) @ModelAttribute MemberVO memberVO
 			                  , BindingResult bindingResult
 			                  , HttpSession session
 			                  , HttpServletRequest request) {
@@ -78,6 +85,24 @@ public class MemberController {
 		// 접근 IP 받아와서 할당.
 		memberVO.setLatestAccessIp(request.getRemoteAddr());
 		
+		if (bindingResult.hasErrors()) {
+			modelAndView.setViewName("member/memberlogin");
+			modelAndView.addObject("memberVO", memberVO);
+			return modelAndView;
+		}
+		
+		try {
+			MemberVO member = memberService.getMember(memberVO);
+			session.setAttribute("_LOGIN_USER_", member);
+		}
+		catch(IllegalArgumentException iae) {
+			modelAndView.setViewName("member/memberlogin");
+			modelAndView.addObject("memberVO", memberVO);
+			modelAndView.addObject("message", iae.getMessage());
+			return modelAndView;
+		}
+		
+		modelAndView.setViewName("redirect:/board/list");
 		return modelAndView;
 	}
 	

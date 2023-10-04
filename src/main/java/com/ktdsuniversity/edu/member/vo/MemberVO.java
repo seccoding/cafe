@@ -1,23 +1,30 @@
 package com.ktdsuniversity.edu.member.vo;
 
+import com.ktdsuniversity.edu.member.vo.validategroup.MemberLoginGroup;
+import com.ktdsuniversity.edu.member.vo.validategroup.MemberRegistGroup;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class MemberVO {
 
-	@NotBlank(message="이메일을 입력해주세요.")
-	@Email(message="이메일 형태로 입력해주세요.")
+	@NotBlank(groups={ MemberRegistGroup.class, MemberLoginGroup.class }
+	        , message="이메일을 입력해주세요.")
+	@Email(groups=MemberRegistGroup.class, message="이메일 형태로 입력해주세요.")
 	private String email;
 	
-	@NotBlank(message="이름을 입력해주세요.")
+	@NotBlank(groups=MemberRegistGroup.class, message="이름을 입력해주세요.")
 	private String name;
 	
-	@NotBlank(message="비밀번호를 입력해주세요.")
-	@Size(min=10, message="비밀번호는 최소 10자리 이상 입력해주세요.")
+	@NotBlank(groups={MemberRegistGroup.class, MemberLoginGroup.class}
+	        , message="비밀번호를 입력해주세요.")
+	@Size(groups=MemberRegistGroup.class, 
+	      min=10, message="비밀번호는 최소 10자리 이상 입력해주세요.")
 	private String password;
 	
-	@NotBlank(message="비밀번호 확인을 입력해주세요.")
+	@NotBlank(groups=MemberRegistGroup.class
+			, message="비밀번호 확인을 입력해주세요.")
 	private String confirmPassword;
 	
 	private String salt;
