@@ -6,24 +6,51 @@
 	
 	<select id="getBoardAllCount"
 	        resultType="_int">
-		SELECT COUNT(ID)
-          FROM BOARD
+		SELECT COUNT(B.ID)
+          FROM BOARD B
+         INNER JOIN MEMBERS M
+            ON M.EMAIL = B.EMAIL
 	</select>
 	
+	<resultMap type="com.ktdsuniversity.edu.bbs.vo.BoardVO" 
+	           id="boardVOMap">
+	    <!-- PK 컬럼을 대상으로 작성. -->
+	    <id column="ID" property="id" />
+	    <!-- 일반 컬럼을 대상으로 작성. -->
+	    <result column="SUBJECT" property="subject" />
+	    <result column="CONTENT" property="content" />
+	    <result column="EMAIL" property="email" />
+	    <result column="VIEW_CNT" property="viewCnt" />
+	    <result column="CRT_DT" property="crtDt" />
+	    <result column="MDFY_DT" property="mdfyDt" />
+	    <result column="FILE_NAME" property="fileName" />
+	    <result column="ORIGIN_FILE_NAME" property="originFileName" />
+	    <result column="IP_ADDR" property="ipAddr" />
+	    <!-- 1:1 Has a 관계에서 사용한다. -->
+	    <association property="memberVO" 
+	                 javaType="com.ktdsuniversity.edu.member.vo.MemberVO">
+	        <id column="EMAIL" property="email" />
+	        <result column="NAME" property="name" />
+	    </association>
+	</resultMap>
+	
 	<select id="getAllBoard"
-	        resultType="com.ktdsuniversity.edu.bbs.vo.BoardVO">
-		SELECT ID
-		     , SUBJECT
-		     , CONTENT
-		     , EMAIL
-		     , VIEW_CNT
-		     , TO_CHAR(CRT_DT, 'YYYY-MM-DD') CRT_DT
-		     , TO_CHAR(MDFY_DT, 'YYYY-MM-DD') MDFY_DT
-		     , FILE_NAME
-		     , ORIGIN_FILE_NAME
-		     , IP_ADDR
-		  FROM BOARD
-		 ORDER BY ID DESC
+	        resultMap="boardVOMap">
+		SELECT B.ID
+		     , B.SUBJECT
+		     , B.CONTENT
+		     , B.EMAIL
+		     , B.VIEW_CNT
+		     , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
+		     , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+		     , B.FILE_NAME
+		     , B.ORIGIN_FILE_NAME
+		     , B.IP_ADDR
+		     , M.NAME
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 ORDER BY B.ID DESC
 	</select>
 	
 	<insert id="createNewBoard"
@@ -62,26 +89,28 @@
 	<!--  Result Type은 Select 에서만 사용할 수 있는 속성. -->
 	<select id="getOneBoardVO"
 	        parameterType="_int"
-	        resultType="com.ktdsuniversity.edu.bbs.vo.BoardVO">
-		SELECT ID
-		     , SUBJECT
-		     , CONTENT
-		     , EMAIL
-		     , VIEW_CNT
-		     , TO_CHAR(CRT_DT, 'YYYY-MM-DD') CRT_DT
-		     , TO_CHAR(MDFY_DT, 'YYYY-MM-DD') MDFY_DT
-		     , FILE_NAME
-		     , ORIGIN_FILE_NAME
-		     , IP_ADDR
-		  FROM BOARD
-		 WHERE ID = #{_parameter}
+	        resultMap="boardVOMap">
+		SELECT B.ID
+		     , B.SUBJECT
+		     , B.CONTENT
+		     , B.EMAIL
+		     , B.VIEW_CNT
+		     , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
+		     , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+		     , B.FILE_NAME
+		     , B.ORIGIN_FILE_NAME
+		     , B.IP_ADDR
+		     , M.NAME
+		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON M.EMAIL = B.EMAIL
+		 WHERE B.ID = #{_parameter}
 	</select>
 	
 	<update id="updateOneBoard"
 	        parameterType="com.ktdsuniversity.edu.bbs.vo.BoardVO">
 	    UPDATE BOARD
 		   SET SUBJECT = #{subject}
-		     , EMAIL = #{email}
 		     , CONTENT = #{content}
 		     , MDFY_DT = SYSDATE
 		     <if test='fileName != null and fileName != ""'>
