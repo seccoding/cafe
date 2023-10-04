@@ -54,18 +54,50 @@
 	div.grid {
 		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 28px 1fr 28px;
+		grid-template-rows: 28px 28px 1fr 28px;
 		row-gap: 10px;
 	}
-
 	div.grid div.right-align {
 		text-align: right;
 	}
+	ul.horizontal-list {
+	   padding: 0px;
+	   margin: 0px;
+	}
+	ul.horizontal-list li {
+	   display: inline;
+    }
 </style>
 </head>
 <body>
 	
 	<div class="grid">
+	    <div class="right-align">
+	        <ul class="horizontal-list">
+	            <c:choose>
+	                <c:when test="${empty sessionScope._LOGIN_USER_}">
+	                    <!-- 로그아웃 상태 -->
+	                    <li>
+	                        <a href="/member/regist">회원가입</a>
+	                    </li>
+	                    <li>
+	                        <a href="/member/login">로그인</a>
+	                    </li>
+	                </c:when>
+	                <c:otherwise>
+	                    <!-- 로그인 상태 -->
+	                    <li style="margin-right: 15px;">
+	                        ${sessionScope._LOGIN_USER_.name}
+	                        (${sessionScope._LOGIN_USER_.email})
+	                    </li>
+	                    <li>
+	                        <a href="/member/logout">로그아웃</a>
+	                    </li>
+	                </c:otherwise>
+	            </c:choose>
+	        </ul>
+	    </div>
+	
 		<div class="right-align">
 			총 ${boardList.boardCnt} 건의 게시글이 검색되었습니다.
 		</div>

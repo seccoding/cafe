@@ -106,6 +106,12 @@ public class MemberController {
 		return modelAndView;
 	}
 	
+	@GetMapping("/member/logout")
+	public String doLogout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/board/list";
+	}
+	
 }
 
 
