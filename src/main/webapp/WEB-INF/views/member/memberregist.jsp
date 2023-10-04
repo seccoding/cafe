@@ -79,7 +79,7 @@
 <body>
     <h1>회원가입</h1>
     <form:form modelAttribute="memberVO" method="post">
-        
+        <!-- 주석입니다. -->
         <div>
             <form:errors path="email" element="div" cssClass="errors" />
             <form:errors path="name" element="div" cssClass="errors" />
