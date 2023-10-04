@@ -39,4 +39,26 @@ public class MemberServiceImpl implements MemberService {
 		return insertCount > 0;
 	}
 
+	@Override
+	public MemberVO getMember(MemberVO memberVO) {
+		String salt = memberDao.getSalt(memberVO.getEmail());
+		if (salt == null) {
+			throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
+		}
+		
+		String password = memberVO.getPassword();
+		String encryptedPassword = sha.getEncrypt(password, salt);
+		memberVO.setPassword(encryptedPassword);
+		
+		MemberVO member = memberDao.getMember(memberVO);
+		if (member == null) {
+			memberDao.failLogin(memberVO);
+			memberDao.blockMember(memberVO.getEmail());
+			throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
+		}
+		
+		memberDao.successLogin(memberVO);
+		return member;
+	}
+
 }

@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ktdsuniversity.edu.member.service.MemberService;
 import com.ktdsuniversity.edu.member.vo.MemberVO;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -65,6 +67,18 @@ public class MemberController {
 		// Map을 반환하면 @ResponesBody에 의해 JSON으로 변환되어 응답된다.
 		return responseMap;
 		
+	}
+	
+	@PostMapping("/member/login")
+	public ModelAndView doLogin(@Valid @ModelAttribute MemberVO memberVO
+			                  , BindingResult bindingResult
+			                  , HttpSession session
+			                  , HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		// 접근 IP 받아와서 할당.
+		memberVO.setLatestAccessIp(request.getRemoteAddr());
+		
+		return modelAndView;
 	}
 	
 }
