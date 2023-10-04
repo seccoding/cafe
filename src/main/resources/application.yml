@@ -1,0 +1,32 @@
+spring:
+    servlet:
+        multipart:
+            # 최대 업로드 파일의 크기 설정
+            # 1024 byte * 1024 killobyte * 100
+            max-file-size: 104857600
+            # 요청당(사용자가) 업로드 할 수 있는 최대 파일의 크기 설정
+            # 10mb
+            max-request-size: 10485760
+    datasource:
+        url: jdbc:oracle:thin:@localhost:1521:XE
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        username: SPRING_BOOT
+        password: 1234
+    mvc:
+        view:
+            prefix: /WEB-INF/views/
+            suffix: .jsp
+mybatis:
+    config-location: classpath:mybatis/mybatis-config.xml
+    mapper-locations: classpath:com/ktdsuniversity/edu/**/dao/mapper/*.xml
+    
+# 파일 업로드 커스텀 설정
+app:
+    multipart: # 파일 업로드 정책 관련 설정.
+        # 업로드한 파일이 저장될 위치
+        base-dir: C:/uploadFiles
+        obfuscation: # 파일명 난독화 관련 설정.
+            # 난독화 사용 여부
+            enable: true
+            hide-ext: # 파일명에서 확장자를 숨길 것인지에 대한 설정.
+                enable: true

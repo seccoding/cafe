@@ -1,0 +1,47 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ktdsuniversity.edu.member.dao.MemberDao">
+    
+    <select id="getEmailCount" 
+            parameterType="string"
+            resultType="_int">
+        SELECT COUNT(1)
+		  FROM MEMBERS
+		 WHERE EMAIL = #{_parameter}
+    </select>
+    
+    <insert id="createNewMember"
+            parameterType="com.ktdsuniversity.edu.member.vo.MemberVO">
+        INSERT INTO MEMBERS
+		 (EMAIL
+		, NAME
+		, PASSWORD
+		, SALT
+		, BLOCK_YN
+		, LOGIN_CNT
+		, LATEST_LOGIN_SUCCESS_DATE
+		, LATEST_LOGIN_FAIL_DATE
+		, LATEST_ACCESS_IP
+		, REGIST_DATE)
+		VALUES 
+		 (#{email}
+		, #{name}
+		, #{password}
+		, #{salt}
+		, 'N' /*BLOCK_YN*/
+		, 0 /*LOGIN_CNT*/
+		, NULL /*LATEST_LOGIN_SUCCESS_DATE*/
+		, NULL /*LATEST_LOGIN_FAIL_DATE*/
+		, NULL /*LATEST_ACCESS_IP*/
+		, SYSDATE /*REGIST_DATE*/)
+    </insert>
+    
+</mapper>
+
+
+
+
+
+
