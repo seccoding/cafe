@@ -9,9 +9,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ktdsuniversity.edu.member.service.MemberService;
@@ -112,6 +114,33 @@ public class MemberController {
 		return "redirect:/board/list";
 	}
 	
+	@GetMapping("/member/delete-me")
+	public String doDeleteMe(
+			// JSP sessionScope._LOGIN_USER_ 와 같은 기능을 함.
+			@SessionAttribute("_LOGIN_USER_") MemberVO memberVO
+		  , HttpSession session) {
+		
+		boolean isSuccess = memberService.deleteMe(memberVO.getEmail());
+		if (!isSuccess) {
+			return "redirect:/member/fail-delete-me";
+		}
+		
+		session.invalidate();
+		return "redirect:/member/success-delete-me";
+	}
+	
+	@GetMapping("/member/{result}-delete-me")
+	public String viewDeleteMePage(@PathVariable String result) {
+		
+		result = result.toLowerCase();
+		if ( !result.equals("fail") && !result.equals("success") ) {
+			// result의 값이 fail, success가 아니면 404페이지 보여주기
+			return "error/404";
+		}
+		
+		return "member/" + result + "deleteme";
+		
+	}
 }
 
 

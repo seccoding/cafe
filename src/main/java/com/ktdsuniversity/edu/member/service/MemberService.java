@@ -27,4 +27,11 @@ public interface MemberService {
 	 */
 	public MemberVO getMember(MemberVO memberVO);
 	
+	/**
+	 * 회원을 탈퇴 시킨다.
+	 * @param email 탈퇴시킬 회원의 이메일
+	 * @return 탈퇴 성공 여부
+	 */
+	public boolean deleteMe(String email);
+	
 }

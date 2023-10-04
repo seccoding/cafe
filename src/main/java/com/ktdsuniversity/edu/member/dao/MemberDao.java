@@ -60,4 +60,16 @@ public interface MemberDao {
 	 */
 	public int blockMember(String email);
 	
+	/**
+	 * 회원 DELETE 쿼리를 실행한다.
+	 * @param email 삭제할 회원의 이메일
+	 * @return DB에 Delete한 회원의 개수
+	 */
+	public int deleteMe(String email);
+	
 }
+
+
+
+
+

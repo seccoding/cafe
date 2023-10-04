@@ -64,5 +64,11 @@ public class MemberServiceImpl implements MemberService {
 		memberDao.successLogin(memberVO);
 		return member;
 	}
+	
+	@Override
+	public boolean deleteMe(String email) {
+		int deleteCount = memberDao.deleteMe(email);
+		return deleteCount > 0;
+	}
 
 }

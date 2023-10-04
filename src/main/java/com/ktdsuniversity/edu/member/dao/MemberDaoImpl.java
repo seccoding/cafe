@@ -51,4 +51,9 @@ public class MemberDaoImpl extends SqlSessionDaoSupport implements MemberDao {
 		return getSqlSession().update("blockMember", email);
 	}
 
+	@Override
+	public int deleteMe(String email) {
+		return getSqlSession().delete("deleteMe", email);
+	}
+
 }

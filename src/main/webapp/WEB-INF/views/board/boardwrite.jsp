@@ -48,6 +48,9 @@
 </style>
 </head>
 <body>
+    
+    <jsp:include page="../member/membermenu.jsp"></jsp:include>
+    
 	<h1>게시글 작성</h1>
 	<form:form modelAttribute="boardVO" method="post" enctype="multipart/form-data">
 		

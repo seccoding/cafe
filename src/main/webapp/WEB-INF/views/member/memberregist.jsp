@@ -77,6 +77,9 @@
 </script>
 </head>
 <body>
+    
+    <jsp:include page="./membermenu.jsp"></jsp:include>
+    
     <h1>회원가입</h1>
     <form:form modelAttribute="memberVO" method="post">
         <!-- 주석입니다. -->

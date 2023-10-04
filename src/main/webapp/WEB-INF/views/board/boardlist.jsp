@@ -72,32 +72,9 @@
 <body>
 	
 	<div class="grid">
-	    <div class="right-align">
-	        <ul class="horizontal-list">
-	            <c:choose>
-	                <c:when test="${empty sessionScope._LOGIN_USER_}">
-	                    <!-- 로그아웃 상태 -->
-	                    <li>
-	                        <a href="/member/regist">회원가입</a>
-	                    </li>
-	                    <li>
-	                        <a href="/member/login">로그인</a>
-	                    </li>
-	                </c:when>
-	                <c:otherwise>
-	                    <!-- 로그인 상태 -->
-	                    <li style="margin-right: 15px;">
-	                        ${sessionScope._LOGIN_USER_.name}
-	                        (${sessionScope._LOGIN_USER_.email})
-	                    </li>
-	                    <li>
-	                        <a href="/member/logout">로그아웃</a>
-	                    </li>
-	                </c:otherwise>
-	            </c:choose>
-	        </ul>
-	    </div>
-	
+	    
+	    <jsp:include page="../member/membermenu.jsp"></jsp:include>
+	    
 		<div class="right-align">
 			총 ${boardList.boardCnt} 건의 게시글이 검색되었습니다.
 		</div>
