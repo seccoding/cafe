@@ -1,5 +1,8 @@
 package com.ktdsuniversity.edu.beans;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -23,11 +26,11 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// 정적자원의 URL과 위치를 설정한다.
 		registry.addResourceHandler("/js/**")
-		        .addResourceLocations("classpath:/static/js");
+		        .addResourceLocations("classpath:/static/js/");
 		registry.addResourceHandler("/css/**")
-		        .addResourceLocations("classpath:/static/css");
+		        .addResourceLocations("classpath:/static/css/");
 		registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images");
+                .addResourceLocations("classpath:/static/images/");
 	}
 	
 	/**
@@ -36,11 +39,23 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		
+		// 세션 체크를 하지 않을 URL 패턴들을 정의.
+		List<String> excludePatterns = new ArrayList<>();
+		excludePatterns.add("/member/regist/**");
+		excludePatterns.add("/member/login");
+		excludePatterns.add("/board/list");
+		excludePatterns.add("/js/**");
+		excludePatterns.add("/css/**");
+		excludePatterns.add("/images/**");
+		excludePatterns.add("/error/**");
+		
 		// 인터셉터 등록.
 		registry.addInterceptor( new CheckSessionInterceptor() )
 				// CheckSessionInterceptor가 모든 URL을 대상으로
 				// 요청과 응답을 가로채도록 한다.
-		        .addPathPatterns("/**");
+		        .addPathPatterns("/**")
+		        // Interceptor가 개입하지 않을 URL 지정.
+		        .excludePathPatterns(excludePatterns);
 		
 	}
 	

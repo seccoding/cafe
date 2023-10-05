@@ -82,7 +82,9 @@ public class MemberController {
 	public ModelAndView doLogin(@Validated(MemberLoginGroup.class) @ModelAttribute MemberVO memberVO
 			                  , BindingResult bindingResult
 			                  , HttpSession session
-			                  , HttpServletRequest request) {
+			                  , HttpServletRequest request
+                              , @RequestParam(required = false, defaultValue = "/board/list") String next) {
+		
 		ModelAndView modelAndView = new ModelAndView();
 		// 접근 IP 받아와서 할당.
 		memberVO.setLatestAccessIp(request.getRemoteAddr());
@@ -104,7 +106,7 @@ public class MemberController {
 			return modelAndView;
 		}
 		
-		modelAndView.setViewName("redirect:/board/list");
+		modelAndView.setViewName("redirect:" + next);
 		return modelAndView;
 	}
 	
