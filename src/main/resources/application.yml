@@ -12,10 +12,10 @@ spring:
         driver-class-name: oracle.jdbc.driver.OracleDriver
         username: SPRING_BOOT
         password: 1234
-    mvc:
-        view:
-            prefix: /WEB-INF/views/
-            suffix: .jsp
+    # mvc:
+        # view:
+            # prefix: /WEB-INF/views/
+            # suffix: .jsp
 mybatis:
     config-location: classpath:mybatis/mybatis-config.xml
     mapper-locations: classpath:com/ktdsuniversity/edu/**/dao/mapper/*.xml
