@@ -1,0 +1,78 @@
+<!-- Logback 설정. (Log를 어디에 어떻게 쌓을 것인지 설정하는 파일) 
+    scan: logback 설정 파일이 변경되었는지 검사하는 여부 
+    scanPeriod: 몇 초 주기로 변경 검사를 할 것인지 설정 -->
+<configuration scan="true" scanPeriod="30 seconds">
+    
+    <!-- 
+    appender: 실행 이력을 쌓는 설정.
+        name: appender의 이름.
+       class: 실행 이력을 쌓는 방식을 설정.
+         ch.qos.logback.core.ConsoleAppender
+           - 콘솔에 실행 이력을 출력하는 클래스
+    -->
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<!-- 
+		encoder: 어떤 형태로 로그를 만들것인지 설정.
+		 -->
+		<encoder>
+			<pattern>** %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+		</encoder>
+	</appender>
+
+    <!-- 
+        로그를 파일에 기록하는 Appender
+            - ch.qos.logback.core.rolling.RollingFileAppender 
+    -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 
+		  로그 파일을 쌓을 위치를 지정.
+		  당일 로그는 cafe.log에 쌓인다. 
+		-->
+		<file>C:/logs/cafe.log</file>
+		<!-- 
+		  rollingPolicy: 날짜가 지난 로그들은 별도의 파일로 분리 작성시키는 설정.
+		    - ch.qos.logback.core.rolling.TimeBasedRollingPolicy
+		 -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 
+			  파일의 패턴에 따라 시간이 지나면 별도의 파일로 분리보관한다.
+			  cafe.2023-10-05.log
+			  cafe.2023-10-04.log
+			  cafe.2023-10-03.log
+			  ...   
+			 -->
+			<fileNamePattern>C:/logs/cafe.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 
+                maxHistory: 30일이 지난 로그는 삭제한다.
+             -->
+			<maxHistory>30</maxHistory>
+			<!-- 
+			  totalSizeCap: 보관하고있는 로그의 총량이 3기가가 넘어가면
+			                가장 마지막 로그부터 삭제한다.
+			                로그가 지워지면 안된다. 따라서 아래 설정은 필요없음. 
+			 -->
+			<!-- <totalSizeCap>3GB</totalSizeCap> -->
+		</rollingPolicy>
+
+		<encoder>
+            <pattern>** %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+        </encoder>
+	</appender>
+    
+    <!-- 
+    root: 로그 정책 기본 설정.
+      - level로 로그 정책을 설정한다.
+        - ERROR, WARN, INFO, DEBUG, TRACE
+    -->
+	<root level="debug">
+	    <!-- 
+	       appender-ref에는 appender의 이름을 작성한다.
+	       여기에 등록된 appender만 실행이 된다.
+	     -->
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>

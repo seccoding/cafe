@@ -10,6 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HelloBootController {
 
+	@GetMapping("/pagenotfound")
+	public String pageNotFound() {
+		return "error/404";
+	}
+	
 	@GetMapping("/hello")
 	public ResponseEntity<String> hello() {
 		return new ResponseEntity<>("Hello Spring Boot Controller", HttpStatus.OK);

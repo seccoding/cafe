@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ktdsuniversity.edu.exceptions.FileNotExistsException;
+
 //@Component
 public class FileHandler {
 
@@ -72,7 +74,7 @@ public class FileHandler {
 		try {
 			resource = new InputStreamResource(new FileInputStream(downloadFile));
 		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
+			throw new FileNotExistsException("파일이 존재하지 않습니다.");
 		}
 		
 		// HTTP 응답 객체를 직접 생성한다.

@@ -95,16 +95,8 @@ public class MemberController {
 			return modelAndView;
 		}
 		
-		try {
-			MemberVO member = memberService.getMember(memberVO);
-			session.setAttribute("_LOGIN_USER_", member);
-		}
-		catch(IllegalArgumentException iae) {
-			modelAndView.setViewName("member/memberlogin");
-			modelAndView.addObject("memberVO", memberVO);
-			modelAndView.addObject("message", iae.getMessage());
-			return modelAndView;
-		}
+		MemberVO member = memberService.getMember(memberVO);
+		session.setAttribute("_LOGIN_USER_", member);
 		
 		modelAndView.setViewName("redirect:" + next);
 		return modelAndView;

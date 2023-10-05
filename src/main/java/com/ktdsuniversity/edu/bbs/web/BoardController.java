@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,8 @@ import com.ktdsuniversity.edu.bbs.service.BoardService;
 import com.ktdsuniversity.edu.bbs.vo.BoardListVO;
 import com.ktdsuniversity.edu.bbs.vo.BoardVO;
 import com.ktdsuniversity.edu.beans.FileHandler;
+import com.ktdsuniversity.edu.exceptions.MakeXlsxFileException;
+import com.ktdsuniversity.edu.exceptions.PageNotFoundException;
 import com.ktdsuniversity.edu.member.vo.MemberVO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +44,8 @@ import jakarta.validation.Valid;
 @Controller
 public class BoardController {
 
+	private Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
 	@Autowired
 	private FileHandler fileHandler;
 	
@@ -75,13 +81,13 @@ public class BoardController {
 		// 요청자의 IP 정보를 ipAddr 변수에 할당한다.
 		boardVO.setIpAddr(request.getRemoteAddr());
 		
-		System.out.println("제목: " + boardVO.getSubject());
-		System.out.println("이메일: " + boardVO.getEmail());
-		System.out.println("내용: " + boardVO.getContent());
-		System.out.println("등록일: " + boardVO.getCrtDt());
-		System.out.println("수정일: " + boardVO.getMdfyDt());
-		System.out.println("FileName: " + boardVO.getFileName());
-		System.out.println("OriginFileName: " + boardVO.getOriginFileName());
+		logger.info("제목: " + boardVO.getSubject());
+		logger.info("이메일: " + boardVO.getEmail());
+		logger.info("내용: " + boardVO.getContent());
+		logger.debug("등록일: " + boardVO.getCrtDt());
+		logger.debug("수정일: " + boardVO.getMdfyDt());
+		logger.debug("FileName: " + boardVO.getFileName());
+		logger.debug("OriginFileName: " + boardVO.getOriginFileName());
 		
 		ModelAndView modelAndView = new ModelAndView();
 		
@@ -125,7 +131,7 @@ public class BoardController {
 	//                  => 파라미터의 이름과 VO클래스 멤버변수들의 이름을 동일하게 부여.
 	@GetMapping("/board/view")
 	public ModelAndView viewOneBoard(@RequestParam int id) {
-		System.out.println("조회할 게시글의 번호: " + id);
+		logger.debug("조회할 게시글의 번호: " + id);
 		
 		BoardVO boardVO = boardService.getOneBoard(id, true);
 		
@@ -141,7 +147,7 @@ public class BoardController {
 		// 파일 정보를 얻어오기 위해 게시글을 조회한다.
 		BoardVO boardVO = boardService.getOneBoard(id, false);
 		if (boardVO == null) {
-			throw new IllegalArgumentException("잘못된 접근입니다.");
+			throw new PageNotFoundException("잘못된 접근입니다.");
 		}
 		
 		// 서버에 등록되어있는 파일을 가져온다.
@@ -157,12 +163,12 @@ public class BoardController {
 	public String viewBoardModifyPage(@PathVariable int id
 			                        , Model model
 			                        , @SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
-		System.out.println("PathVariable: " + id);
+		logger.debug("PathVariable: " + id);
 		
 		// 수정할 게시글을 조회.
 		BoardVO boardVO = boardService.getOneBoard(id, false);
 		if (!boardVO.getEmail().equals(memberVO.getEmail())) {
-			throw new IllegalArgumentException("잘못된 접근입니다!");
+			throw new PageNotFoundException("잘못된 접근입니다!");
 		}
 		
 		// View에게 boardVO 라는 이름으로 boardVO를 전달한다.
@@ -177,13 +183,13 @@ public class BoardController {
 			Model model,
 			@RequestParam MultipartFile file,
 		    @SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
-		System.out.println("제목: " + boardVO.getSubject());
-		System.out.println("이메일: " + boardVO.getEmail());
-		System.out.println("내용: " + boardVO.getContent());
-		System.out.println("등록일: " + boardVO.getCrtDt());
-		System.out.println("수정일: " + boardVO.getMdfyDt());
-		System.out.println("FileName: " + boardVO.getFileName());
-		System.out.println("OriginFileName: " + boardVO.getOriginFileName());
+		logger.debug("제목: " + boardVO.getSubject());
+		logger.debug("이메일: " + boardVO.getEmail());
+		logger.debug("내용: " + boardVO.getContent());
+		logger.debug("등록일: " + boardVO.getCrtDt());
+		logger.debug("수정일: " + boardVO.getMdfyDt());
+		logger.debug("FileName: " + boardVO.getFileName());
+		logger.debug("OriginFileName: " + boardVO.getOriginFileName());
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("boardVO", boardVO);
@@ -192,7 +198,7 @@ public class BoardController {
 		
 		BoardVO originBoardVO = boardService.getOneBoard(boardVO.getId(), false);
 		if (!originBoardVO.getEmail().equals(memberVO.getEmail())) {
-			throw new IllegalArgumentException("잘못된 접근입니다!");
+			throw new PageNotFoundException("잘못된 접근입니다!");
 		}
 		
 		// 게시글 수정
@@ -217,7 +223,7 @@ public class BoardController {
 		
 		BoardVO originBoardVO = boardService.getOneBoard(id, false);
 		if (!originBoardVO.getEmail().equals(memberVO.getEmail())) {
-			throw new IllegalArgumentException("잘못된 접근입니다!");
+			throw new PageNotFoundException("잘못된 접근입니다!");
 		}
 		
 		// 게시글 삭제.
@@ -312,7 +318,7 @@ public class BoardController {
 			os = new FileOutputStream(excelFile);
 			workbook.write(os);
 		} catch (IOException e) {
-			throw new IllegalArgumentException("엑셀 파일을 만들 수 없습니다.");
+			throw new MakeXlsxFileException("엑셀 파일을 만들 수 없습니다.");
 		} finally {
 			// 파일로 다 쓰고 나면
 			// 엑셀 파일을 닫는다.

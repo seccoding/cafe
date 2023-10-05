@@ -2,6 +2,8 @@ package com.ktdsuniversity.edu.beans;
 
 import java.util.Enumeration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ktdsuniversity.edu.member.vo.MemberVO;
@@ -13,12 +15,14 @@ import jakarta.servlet.http.HttpSession;
 
 public class CheckSessionInterceptor implements HandlerInterceptor {
 
+	private Logger logger = LoggerFactory.getLogger(CheckSessionInterceptor.class);
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("Controller가 실행되기 전 입니다.");
-		System.out.println(handler.getClass().getName() + "가 실행됩니다.");
-		System.out.println(request.getRequestURI());
+		logger.debug("Controller가 실행되기 전 입니다.");
+		logger.info(handler.getClass().getName() + "가 실행됩니다.");
+		logger.warn(request.getRequestURI());
 		
 		// 브라우저의 세션을 가져온다.
 		HttpSession session = request.getSession();
