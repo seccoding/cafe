@@ -24,7 +24,7 @@ function connectSocket(userName, userEmail, receiveCallback) {
         sock.onmessage = function(e) {
             var content = JSON.parse(e.data);
 
-            if (content.sendType == "all") {
+            if (content.sendType == "all" || content.sendType == "enter") {
                 receiveCallback(content);
             }
         }
