@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ktdsuniversity.edu.bbs.dao.BoardDAO;
@@ -43,6 +44,10 @@ public class BoardServiceImpl implements BoardService {
 		return boardListVO;
 	}
 
+	
+	@Transactional // 이 애노테이션이 붙어있으면
+	               // 예외 상황이 발생하면 자동으로 Rollback을 처리해준다.
+	               // 예외 상황이 발생하지 않으면 자동으로 Commit을 처리해준다.
 	@Override
 	public boolean createNewBoard(BoardVO boardVO, MultipartFile file) {
 		
@@ -83,6 +88,7 @@ public class BoardServiceImpl implements BoardService {
 		return createCount > 0;
 	}
 
+	@Transactional
 	@Override
 	public BoardVO getOneBoard(int id, boolean isIncrease) {
 		
@@ -96,6 +102,11 @@ public class BoardServiceImpl implements BoardService {
 				// 이럴 때, "잘못된 접근입니다." 라고 사용자에게 예외 메시지를 보내준다.
 				throw new PageNotFoundException("잘못된 접근입니다.");
 			}
+			
+			// 트랜잭션 테스트를 위한 예외 발생.
+			// NumberFormatException발생!
+			// 조회수가 증가했다가 롤백 되어야 한다!
+//			Integer.parseInt("AAA");
 		}
 		
 		// 예외가 발생하지 않았다면, 게시글 정보를 조회해 반환한다.
@@ -108,6 +119,7 @@ public class BoardServiceImpl implements BoardService {
 		return boardVO;
 	}
 
+	@Transactional
 	@Override
 	public boolean updateOneBoard(BoardVO boardVO, MultipartFile file) {
 		
@@ -138,6 +150,7 @@ public class BoardServiceImpl implements BoardService {
 		return updateCount > 0;
 	}
 
+	@Transactional
 	@Override
 	public boolean deleteOneBoard(int id) {
 		
