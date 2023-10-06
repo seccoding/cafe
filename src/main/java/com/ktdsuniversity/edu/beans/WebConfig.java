@@ -3,6 +3,7 @@ package com.ktdsuniversity.edu.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -10,12 +11,24 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+import com.ktdsuniversity.edu.beans.websocket.CafeWebSocketHandler;
 
 @Configuration // 인터셉터를 등록하기 위한 애노테이션. Spring Boot Web 에 관한 설정.
 @Configurable // Spring Boot 설정을 해주는 클래스로 변경하겠다.
 @EnableWebMvc // WebMVC Module을 사용하겠다. (Validator 사용하기 위해서)
-public class WebConfig implements WebMvcConfigurer {
+@EnableWebSocket
+public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer {
 
+	/**
+	 * 채팅 핸들러
+	 */
+	@Autowired
+	private CafeWebSocketHandler handler;
+	
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
 		// JSP 파일의 위치를 설정한다.
@@ -57,6 +70,14 @@ public class WebConfig implements WebMvcConfigurer {
 		        // Interceptor가 개입하지 않을 URL 지정.
 		        .excludePathPatterns(excludePatterns);
 		
+	}
+
+	/**
+	 * 웹소켓 엔드포인트 생성.
+	 */
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(handler, "/cafe-chat").setAllowedOriginPatterns("*").withSockJS();
 	}
 	
 }
