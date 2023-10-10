@@ -89,6 +89,10 @@
     
     <update id="modifyOneReply"
             parameterType="com.ktdsuniversity.edu.bbs.vo.ReplyVO">
+        UPDATE REPLIES
+           SET CONTENT = #{content}
+             , MDFY_DT = SYSDATE
+         WHERE REPLY_ID = #{replyId}
     </update>
     
     <update id="recommendOneReply"
