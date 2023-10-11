@@ -212,10 +212,54 @@
 		loadReplies()
 
 		// 등록버튼 클릭
-		$("#btn-save-reply").click(function() {})
+		$("#btn-save-reply").click(function() {
+			// 작성한 댓글 내용을 가져온다.
+			var reply = $("#txt-reply").val().trim()
+			// 저장 모드? 등록, 수정 구분하는 구분자 가져온다.
+			var mode = $("#txt-reply").data("mode")
+			// 대댓글일 경우, 상위 댓글의 아이디를 가져온다.
+			var target = $("#txt-reply").data("target")
+
+			// 댓글 내용을 입력했다면 등록을 진행한다.
+			if (reply != "") {
+				// Ajax 요청을 위한 데이터를 생성한다.
+				var body = { "content": reply }
+				// 등록 URL을 생성한다.
+				var url = `/board/reply/${boardVO.id}`
+
+				// 대댓글일 경우 부모댓글 ID를 데이터에 넣어준다.
+				if (mode == "re-reply") {
+					body.parentReplyId = target
+				}
+
+				// 댓글 수정일 경우 URL을 변경한다.
+				if (mode == "modify") {
+					url = `/board/reply/modify/\${target}`
+				}
+
+				// 등록을 진행한다.
+				$.post(url, body, function(response) {
+					// 댓글 등록 및 수정의 결과를 받아온다
+					var result = response.result
+					// 댓글 등록 및 수정이 성공했다면 댓글을 다시 조회해온다.
+					if (result) {
+						loadReplies()
+						$("#txt-reply").val("")
+						$("#txt-reply").removeData("mode")
+						$("#txt-reply").removeData("target")
+					}
+				})
+
+			}
+
+		})
 
 		// 취소버튼 클릭
-		$("#btn-cancel-reply").click(function() {})
+		$("#btn-cancel-reply").click(function() {
+			$("#txt-reply").val("")
+			$("#txt-reply").removeData("mode")
+			$("#txt-reply").removeData("target")
+		})
 	});
 </script>
 </head>
@@ -249,17 +293,17 @@
 
 		<label for="content">내용</label>
 		<div>${boardVO.content}</div>
-        
-        <c:if test="${not empty sessionScope._LOGIN_USER_ && sessionScope._LOGIN_USER_.email eq boardVO.memberVO.email}">
-			<div class="replies">
-				<div class="reply-items"></div>
-				<div class="write-reply">
-					<textarea id="txt-reply"></textarea>
-					<button id="btn-save-reply">등록</button>
-					<button id="btn-cancel-reply">취소</button>
-				</div>
-			</div>
 
+		<div class="replies">
+			<div class="reply-items"></div>
+			<div class="write-reply">
+				<textarea id="txt-reply"></textarea>
+				<button id="btn-save-reply">등록</button>
+				<button id="btn-cancel-reply">취소</button>
+			</div>
+		</div>
+
+        <c:if test="${not empty sessionScope._LOGIN_USER_ && sessionScope._LOGIN_USER_.email eq boardVO.memberVO.email}">
 			<div class="btn-group">
 				<div class="right-align">
 					<a href="/board/modify/${boardVO.id}">수정</a>

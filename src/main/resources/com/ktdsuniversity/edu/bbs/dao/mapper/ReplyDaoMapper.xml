@@ -33,8 +33,8 @@
              ON R.BOARD_ID = B.ID
           INNER JOIN MEMBERS M
              ON R.EMAIL = M.EMAIL
-          START WITH R.PARENT_REPLY_ID = #{_parameter}
-            AND R.BOARD_ID = 103
+          START WITH R.PARENT_REPLY_ID = 0
+            AND R.BOARD_ID = #{_parameter}
         CONNECT BY PRIOR R.REPLY_ID = R.PARENT_REPLY_ID 
     </select>
     

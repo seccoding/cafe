@@ -51,7 +51,7 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public boolean recommendOneReply(int replyId, String email) {
 		ReplyVO replyVO = replyDao.getOneReply(replyId);
-		if (!email.equals(replyVO.getEmail())) {
+		if (email.equals(replyVO.getEmail())) {
 			throw new PageNotFoundException("잘못된 접근입니다.");
 		}
 		
