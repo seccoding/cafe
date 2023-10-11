@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ktdsuniversity.edu.bbs.dao.BoardDAO;
 import com.ktdsuniversity.edu.bbs.vo.BoardListVO;
 import com.ktdsuniversity.edu.bbs.vo.BoardVO;
+import com.ktdsuniversity.edu.bbs.vo.SearchBoardVO;
 import com.ktdsuniversity.edu.beans.FileHandler;
 import com.ktdsuniversity.edu.beans.FileHandler.StoredFile;
 import com.ktdsuniversity.edu.exceptions.PageNotFoundException;
@@ -33,14 +34,16 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDAO boardDAO;
 	
 	@Override
-	public BoardListVO getAllBoard() {
-		
-		logger.debug(boardDAO.toString());
-		logger.debug(boardDAO.getClass().getSimpleName());
-		
+	public BoardListVO getAllBoard(SearchBoardVO searchBoardVO) {
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setBoardCnt( boardDAO.getBoardAllCount() );
-		boardListVO.setBoardList( boardDAO.getAllBoard() );
+		
+		if (searchBoardVO == null) {
+			boardListVO.setBoardList( boardDAO.getAllBoard() );
+		}
+		else {
+			boardListVO.setBoardList( boardDAO.searchAllBoard(searchBoardVO) );
+		}
 		return boardListVO;
 	}
 

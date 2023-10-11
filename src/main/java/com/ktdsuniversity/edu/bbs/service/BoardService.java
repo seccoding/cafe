@@ -4,10 +4,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ktdsuniversity.edu.bbs.vo.BoardListVO;
 import com.ktdsuniversity.edu.bbs.vo.BoardVO;
+import com.ktdsuniversity.edu.bbs.vo.SearchBoardVO;
 
 public interface BoardService {
 
-	public BoardListVO getAllBoard();
+	/**
+	 * 게시글의 목록과 게시글의 건수를 모두 조회한다.
+	 * @param searchBoardVO 페이지네이션을 위한 파라미터. null을 전달할 경우, 모든 게시글 목록을 조회한다.
+	 * @return
+	 */
+	public BoardListVO getAllBoard(SearchBoardVO searchBoardVO);
 	
 	/**
 	 * 새로운 게시글을 등록 처리한다.

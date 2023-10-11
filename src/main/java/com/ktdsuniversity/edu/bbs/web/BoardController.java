@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ktdsuniversity.edu.bbs.service.BoardService;
 import com.ktdsuniversity.edu.bbs.vo.BoardListVO;
 import com.ktdsuniversity.edu.bbs.vo.BoardVO;
+import com.ktdsuniversity.edu.bbs.vo.SearchBoardVO;
 import com.ktdsuniversity.edu.beans.FileHandler;
 import com.ktdsuniversity.edu.exceptions.MakeXlsxFileException;
 import com.ktdsuniversity.edu.exceptions.PageNotFoundException;
@@ -53,13 +54,16 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@GetMapping("/board/list")
-	public ModelAndView viewBoardList() {
-		BoardListVO boardListVO = boardService.getAllBoard();
+	public ModelAndView viewBoardList(
+			@ModelAttribute SearchBoardVO searchBoardVO) {
+		
+		BoardListVO boardListVO = boardService.getAllBoard(searchBoardVO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		                     // /WEB-INF/views/board/boardlist.jsp
 		modelAndView.setViewName("board/boardlist");
 		modelAndView.addObject("boardList", boardListVO);
+		modelAndView.addObject("searchBoardVO", searchBoardVO);
 		
 		return modelAndView;
 	}
@@ -244,7 +248,7 @@ public class BoardController {
 	public ResponseEntity<Resource> downloadExcelFile() {
 		
 		// 엑셀로 만들 모든 게시글을 조회.
-		BoardListVO boardListVO = boardService.getAllBoard();
+		BoardListVO boardListVO = boardService.getAllBoard(null);
 		
 		// xlsx 파일을 만든다.
 		Workbook workbook = new SXSSFWorkbook(-1);

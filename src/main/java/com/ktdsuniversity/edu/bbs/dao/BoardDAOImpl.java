@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ktdsuniversity.edu.bbs.vo.BoardVO;
+import com.ktdsuniversity.edu.bbs.vo.SearchBoardVO;
 
 @Repository
 public class BoardDAOImpl extends SqlSessionDaoSupport 
@@ -27,6 +28,11 @@ public class BoardDAOImpl extends SqlSessionDaoSupport
 	@Override
 	public List<BoardVO> getAllBoard() {
 		return getSqlSession().selectList("getAllBoard");
+	}
+	
+	@Override
+	public List<BoardVO> searchAllBoard(SearchBoardVO searchBoardVO) {
+		return getSqlSession().selectList("searchAllBoard", searchBoardVO);
 	}
 
 	@Override

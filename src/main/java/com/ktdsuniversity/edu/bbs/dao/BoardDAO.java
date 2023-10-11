@@ -3,6 +3,7 @@ package com.ktdsuniversity.edu.bbs.dao;
 import java.util.List;
 
 import com.ktdsuniversity.edu.bbs.vo.BoardVO;
+import com.ktdsuniversity.edu.bbs.vo.SearchBoardVO;
 
 public interface BoardDAO {
 
@@ -17,6 +18,13 @@ public interface BoardDAO {
 	 * @return 게시글 목록
 	 */
 	public List<BoardVO> getAllBoard();
+	
+	/**
+	 * DB에 저장된 모든 게시글의 목록을 조회.
+	 * @param searchBoardVO 검색할 조건 (페이지번호, 노출할 목록 개수 등)
+	 * @return DB에서 조회된 게시글의 목록 (Pagination)
+	 */
+	public List<BoardVO> searchAllBoard(SearchBoardVO searchBoardVO);
 	
 	/**
 	 * DB에 새로운 게시글을 등록한다.
