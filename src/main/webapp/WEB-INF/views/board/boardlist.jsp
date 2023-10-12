@@ -168,34 +168,35 @@
 		<div>
 			<div>
 				<ul class="page-nav">
-				
-				    <!-- 이전 페이지 그룹 -->
-				    <c:if test="${searchBoardVO.hasPrevGroup}">
-				        <li>
-				            <a href="javascript:void(0)" onclick="movePage(0)">처음</a>
-				        </li>
-				        <li>
-				            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.prevGroupStartPageNo})">이전</a>
-				        </li>
-				    </c:if>
-				    
-                    <c:forEach begin="${searchBoardVO.groupStartPageNo}"
-                               end="${searchBoardVO.groupEndPageNo}"
-                               step="1"
-                               var="p">
-						<li class="${searchBoardVO.pageNo eq p ? "active": ""}">
-							<a href="javascript:void(0)" onclick="movePage(${p})">${p + 1}</a>
-						</li>
-                    </c:forEach>
-                    
-                    <!-- 다음 페이지 그룹 -->
-                    <c:if test="${searchBoardVO.hasNextGroup}">
-                        <li>
-                            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.nextGroupStartPageNo})">다음</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.pageCount-1})">마지막</a>
-                        </li>
+				    <c:if test="${not empty boardList.boardList}">
+					    <!-- 이전 페이지 그룹 -->
+					    <c:if test="${searchBoardVO.hasPrevGroup}">
+					        <li>
+					            <a href="javascript:void(0)" onclick="movePage(0)">처음</a>
+					        </li>
+					        <li>
+					            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.prevGroupStartPageNo})">이전</a>
+					        </li>
+					    </c:if>
+					    
+	                    <c:forEach begin="${searchBoardVO.groupStartPageNo}"
+	                               end="${searchBoardVO.groupEndPageNo}"
+	                               step="1"
+	                               var="p">
+							<li class="${searchBoardVO.pageNo eq p ? "active": ""}">
+								<a href="javascript:void(0)" onclick="movePage(${p})">${p + 1}</a>
+							</li>
+	                    </c:forEach>
+	                    
+	                    <!-- 다음 페이지 그룹 -->
+	                    <c:if test="${searchBoardVO.hasNextGroup}">
+	                        <li>
+	                            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.nextGroupStartPageNo})">다음</a>
+	                        </li>
+	                        <li>
+	                            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.pageCount-1})">마지막</a>
+	                        </li>
+	                    </c:if>
                     </c:if>
 				</ul>
 			</div>
