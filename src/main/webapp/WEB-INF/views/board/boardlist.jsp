@@ -54,7 +54,7 @@
 	div.grid {
 		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 28px 28px 1fr 28px 28px;
+		grid-template-rows: 28px 28px 28px 1fr 28px 28px;
 		row-gap: 10px;
 	}
 	div.grid div.right-align {
@@ -85,12 +85,44 @@
 		font-weight: bold;
 	}
 </style>
+<script type="text/javascript" src="/js/lib/jquery-3.7.1.js"></script>
+<script type="text/javascript">
+    $().ready(function() {
+    	$("#search-btn").click(function() {
+    		movePage()
+    	})
+    })
+    
+    function movePage(pageNo = 0) {
+    	$("#pageNo").val(pageNo)
+    	
+    	$("#search-form").attr({
+    		"method": "get",
+    		"action": "/board/list"
+    	}).submit()
+    }
+    
+</script>
 </head>
 <body>
 	
 	<div class="grid">
 	    
 	    <jsp:include page="../member/membermenu.jsp"></jsp:include>
+	    
+	    <form id="search-form" 
+	          method="get" 
+	          action="/board/list">
+		    <div>
+		        <select name="searchType">
+		            <option value="subject" ${searchBoardVO.searchType eq 'subject' ? 'selected' : ''}>제목</option>
+		            <option value="content" ${searchBoardVO.searchType eq 'content' ? 'selected' : ''}>내용</option>
+		        </select>
+		        <input type="text" name="searchKeyword" value="${searchBoardVO.searchKeyword}" />
+		        <input type="hidden" id="pageNo" name="pageNo" />
+		        <button id="search-btn">검색</button>
+		    </div>
+	    </form>
 	    
 		<div class="right-align">
 			총 ${boardList.boardCnt} 건의 게시글이 검색되었습니다.
@@ -140,10 +172,10 @@
 				    <!-- 이전 페이지 그룹 -->
 				    <c:if test="${searchBoardVO.hasPrevGroup}">
 				        <li>
-				            <a href="/board/list?pageNo=0">처음</a>
+				            <a href="javascript:void(0)" onclick="movePage(0)">처음</a>
 				        </li>
 				        <li>
-				            <a href="/board/list?pageNo=${searchBoardVO.prevGroupStartPageNo}">이전</a>
+				            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.prevGroupStartPageNo})">이전</a>
 				        </li>
 				    </c:if>
 				    
@@ -152,17 +184,17 @@
                                step="1"
                                var="p">
 						<li class="${searchBoardVO.pageNo eq p ? "active": ""}">
-							<a href="/board/list?pageNo=${p}">${p + 1}</a>
+							<a href="javascript:void(0)" onclick="movePage(${p})">${p + 1}</a>
 						</li>
                     </c:forEach>
                     
                     <!-- 다음 페이지 그룹 -->
                     <c:if test="${searchBoardVO.hasNextGroup}">
                         <li>
-                            <a href="/board/list?pageNo=${searchBoardVO.nextGroupStartPageNo}">다음</a>
+                            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.nextGroupStartPageNo})">다음</a>
                         </li>
                         <li>
-                            <a href="/board/list?pageNo=${searchBoardVO.pageCount-1}">마지막</a>
+                            <a href="javascript:void(0)" onclick="movePage(${searchBoardVO.pageCount-1})">마지막</a>
                         </li>
                     </c:if>
 				</ul>

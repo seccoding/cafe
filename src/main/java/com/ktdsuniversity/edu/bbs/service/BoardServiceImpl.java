@@ -36,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardListVO getAllBoard(SearchBoardVO searchBoardVO) {
 		BoardListVO boardListVO = new BoardListVO();
-		boardListVO.setBoardCnt( boardDAO.getBoardAllCount() );
+		boardListVO.setBoardCnt( boardDAO.getBoardAllCount(searchBoardVO) );
 		
 		if (searchBoardVO == null) {
 			boardListVO.setBoardList( boardDAO.getAllBoard() );

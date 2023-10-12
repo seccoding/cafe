@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+	
+	<sql id="pagination_header">
+	    SELECT *
+          FROM (SELECT ROWNUM RNUM
+                     , S.*
+                  FROM (
+	</sql>
+	
+	<sql id="pagination_footer">
+	                   ) S
+                         /*CDATA 내부의 텍스트는 원문 그대로 출력하게 한다.*/
+                 WHERE ROWNUM <![CDATA[<=]]> (#{pageNo} + 1) * #{listSize} /*조회 끝 번호*/)
+         WHERE RNUM >= #{pageNo} * #{listSize} + 1 /*조회 시작 번호*/
+	</sql>
+	
+</mapper>
+
+
+
+
+
+

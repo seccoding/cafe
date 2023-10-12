@@ -21,8 +21,8 @@ public class BoardDAOImpl extends SqlSessionDaoSupport
 	}
 	
 	@Override
-	public int getBoardAllCount() {
-		return getSqlSession().selectOne("getBoardAllCount");
+	public int getBoardAllCount(SearchBoardVO searchBoardVO) {
+		return getSqlSession().selectOne("getBoardAllCount", searchBoardVO);
 	}
 
 	@Override

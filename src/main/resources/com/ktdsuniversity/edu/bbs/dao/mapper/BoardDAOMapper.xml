@@ -5,11 +5,20 @@
 <mapper namespace="com.ktdsuniversity.edu.bbs.dao.BoardDAO">
 	
 	<select id="getBoardAllCount"
+	        parameterType="com.ktdsuniversity.edu.bbs.vo.SearchBoardVO"
 	        resultType="_int">
 		SELECT COUNT(B.ID)
           FROM BOARD B
          INNER JOIN MEMBERS M
             ON M.EMAIL = B.EMAIL
+         <if test='searchKeyword != null and searchKeyword != ""'>
+             <if test='searchType == "subject"'>
+         WHERE B.SUBJECT LIKE '%' || #{searchKeyword} || '%'
+             </if>
+             <if test='searchType == "content"'>
+         WHERE B.CONTENT LIKE '%' || #{searchKeyword} || '%'
+             </if>
+         </if>
 	</select>
 	
 	<resultMap type="com.ktdsuniversity.edu.bbs.vo.BoardVO" 
@@ -56,27 +65,31 @@
 	<select id="searchAllBoard"
 	        parameterType="com.ktdsuniversity.edu.bbs.vo.SearchBoardVO"
 	        resultMap="boardVOMap">
-	    SELECT *
-		  FROM (SELECT ROWNUM RNUM
-		             , S.*
-		          FROM (SELECT B.ID
-		                     , B.SUBJECT
-		                     , B.CONTENT
-		                     , B.EMAIL
-		                     , B.VIEW_CNT
-		                     , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
-		                     , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
-		                     , B.FILE_NAME
-		                     , B.ORIGIN_FILE_NAME
-		                     , B.IP_ADDR
-		                     , M.NAME
-		                  FROM BOARD B
-		                 INNER JOIN MEMBERS M
-		                    ON M.EMAIL = B.EMAIL
-		                 ORDER BY B.ID DESC) S
-		                 /*CDATA 내부의 텍스트는 원문 그대로 출력하게 한다.*/
-		         WHERE ROWNUM <![CDATA[<=]]> (#{pageNo} + 1) * #{listSize} /*조회 끝 번호*/)
-		 WHERE RNUM >= #{pageNo} * #{listSize} + 1 /*조회 시작 번호*/
+	    <include refid="common.pagination_header" />
+	    SELECT B.ID
+             , B.SUBJECT
+             , B.CONTENT
+             , B.EMAIL
+             , B.VIEW_CNT
+             , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD') CRT_DT
+             , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD') MDFY_DT
+             , B.FILE_NAME
+             , B.ORIGIN_FILE_NAME
+             , B.IP_ADDR
+             , M.NAME
+          FROM BOARD B
+         INNER JOIN MEMBERS M
+            ON M.EMAIL = B.EMAIL
+         <if test='searchKeyword != null and searchKeyword != ""'>
+             <if test='searchType == "subject"'>
+         WHERE B.SUBJECT LIKE '%' || #{searchKeyword} || '%'
+             </if>
+             <if test='searchType == "content"'>
+         WHERE B.CONTENT LIKE '%' || #{searchKeyword} || '%'
+             </if>
+         </if>
+         ORDER BY B.ID DESC
+         <include refid="common.pagination_footer" />
 	</select>
 	
 	<insert id="createNewBoard"

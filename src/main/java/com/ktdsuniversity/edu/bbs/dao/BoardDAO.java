@@ -9,9 +9,10 @@ public interface BoardDAO {
 
 	/**
 	 * DB에 저장된 모든 게시글의 수를 조회
+	 * @param searchBoardVO 검색할 조건 (페이지번호, 노출할 목록 개수 등)
 	 * @return 게시글의 수
 	 */
-	public int getBoardAllCount();
+	public int getBoardAllCount(SearchBoardVO searchBoardVO);
 	
 	/**
 	 * DB에 저장된 모든 게시글의 목록을 조회
