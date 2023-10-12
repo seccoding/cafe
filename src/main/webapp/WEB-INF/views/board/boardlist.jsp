@@ -54,7 +54,7 @@
 	div.grid {
 		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 28px 28px 1fr 28px;
+		grid-template-rows: 28px 28px 1fr 28px 28px;
 		row-gap: 10px;
 	}
 	div.grid div.right-align {
@@ -67,6 +67,23 @@
 	ul.horizontal-list li {
 	   display: inline;
     }
+
+	ul.page-nav {
+		margin: 0px;
+		padding: 0px;
+		text-align: center;
+	}
+
+	ul.page-nav > li {
+		display: inline-block;
+		padding: 10px;
+		color: #333;
+	}
+
+	ul.page-nav > li.active > a {
+		color: #F00;
+		font-weight: bold;
+	}
 </style>
 </head>
 <body>
@@ -115,6 +132,43 @@
 			    </c:choose>
 			</tbody>
 		</table>
+		
+		<div>
+			<div>
+				<ul class="page-nav">
+				
+				    <!-- 이전 페이지 그룹 -->
+				    <c:if test="${searchBoardVO.hasPrevGroup}">
+				        <li>
+				            <a href="/board/list?pageNo=0">처음</a>
+				        </li>
+				        <li>
+				            <a href="/board/list?pageNo=${searchBoardVO.prevGroupStartPageNo}">이전</a>
+				        </li>
+				    </c:if>
+				    
+                    <c:forEach begin="${searchBoardVO.groupStartPageNo}"
+                               end="${searchBoardVO.groupEndPageNo}"
+                               step="1"
+                               var="p">
+						<li class="${searchBoardVO.pageNo eq p ? "active": ""}">
+							<a href="/board/list?pageNo=${p}">${p + 1}</a>
+						</li>
+                    </c:forEach>
+                    
+                    <!-- 다음 페이지 그룹 -->
+                    <c:if test="${searchBoardVO.hasNextGroup}">
+                        <li>
+                            <a href="/board/list?pageNo=${searchBoardVO.nextGroupStartPageNo}">다음</a>
+                        </li>
+                        <li>
+                            <a href="/board/list?pageNo=${searchBoardVO.pageCount-1}">마지막</a>
+                        </li>
+                    </c:if>
+				</ul>
+			</div>
+		</div>
+
 		<c:if test="${not empty sessionScope._LOGIN_USER_}">
 			<div class="right-align">
 			    <a href="/board/excel/download">엑셀 다운로드</a>

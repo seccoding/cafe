@@ -58,6 +58,7 @@ public class BoardController {
 			@ModelAttribute SearchBoardVO searchBoardVO) {
 		
 		BoardListVO boardListVO = boardService.getAllBoard(searchBoardVO);
+		searchBoardVO.setPageCount(boardListVO.getBoardCnt());
 		
 		ModelAndView modelAndView = new ModelAndView();
 		                     // /WEB-INF/views/board/boardlist.jsp
