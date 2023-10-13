@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,6 +17,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
+import com.ktdsuniversity.edu.beans.filter.xss.XssEscapeServletFilter;
 import com.ktdsuniversity.edu.beans.websocket.CafeWebSocketHandler;
 
 @Configuration // 인터셉터를 등록하기 위한 애노테이션. Spring Boot Web 에 관한 설정.
@@ -80,5 +83,13 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer {
 		registry.addHandler(handler, "/cafe-chat").setAllowedOriginPatterns("*").withSockJS();
 	}
 	
+	@Bean
+	public FilterRegistrationBean<XssEscapeServletFilter> filterRegistrationBean() {
+		FilterRegistrationBean<XssEscapeServletFilter> filterRegistration = new FilterRegistrationBean<>();
+		filterRegistration.setFilter(new XssEscapeServletFilter());
+		filterRegistration.setOrder(1);
+		filterRegistration.addUrlPatterns("/*");
+		return filterRegistration;
+	}
 }
 
