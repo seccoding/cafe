@@ -3,89 +3,6 @@
     pageEncoding="UTF-8"%>
 <!-- Taglib Directive -->
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>게시글 목록</title>
-<style type="text/css">
-	a:link, a:hover, a:active, a:visited {
-		color: #333;
-		text-decoration: none;
-	}
-
-	table.table {
-		border-collapse: collapse;
-		border: 1px solid #DDD;
-	}
-
-	table.table > thead > tr {
-		background-color: #FFF;
-	}
-
-	table.table > thead th {
-		padding: 10px;
-		color: #333;
-	}
-
-	table.table th, table.table td {
-		border-right: 1px solid #F0F0F0;
-	}
-
-	table.table th:last-child,
-	table.table td:last-child {
-		border-right: none;
-	}
-
-	table.table > tbody > tr:nth-child(odd) {
-		background-color: #F5F5F5;
-	}
-
-	table.table > tbody tr:hover {
-		background-color: #FAFAFA;
-	}
-
-	table.table > tbody td {
-		padding: 10px;
-		color: #333;
-	}
-
-	div.grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: 28px 28px 28px 1fr 28px 28px;
-		row-gap: 10px;
-	}
-	div.grid div.right-align {
-		text-align: right;
-	}
-	ul.horizontal-list {
-	   padding: 0px;
-	   margin: 0px;
-	}
-	ul.horizontal-list li {
-	   display: inline;
-    }
-
-	ul.page-nav {
-		margin: 0px;
-		padding: 0px;
-		text-align: center;
-	}
-
-	ul.page-nav > li {
-		display: inline-block;
-		padding: 10px;
-		color: #333;
-	}
-
-	ul.page-nav > li.active > a {
-		color: #F00;
-		font-weight: bold;
-	}
-</style>
-<script type="text/javascript" src="/js/lib/jquery-3.7.1.js"></script>
 <script type="text/javascript">
     $().ready(function() {
     	$("#search-btn").click(function() {
@@ -103,12 +20,10 @@
     }
     
 </script>
-</head>
-<body>
-	
+
+<jsp:include page="../layout/header.jsp" />	
+
 	<div class="grid">
-	    
-	    <jsp:include page="../member/membermenu.jsp"></jsp:include>
 	    
 	    <form id="search-form" 
 	          method="get" 
@@ -209,6 +124,5 @@
 			</div>
 		</c:if>
 	</div>
-
-</body>
-</html>
+	
+<jsp:include page="../layout/footer.jsp" />

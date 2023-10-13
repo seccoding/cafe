@@ -1,0 +1,118 @@
+@charset "UTF-8";
+#body-wrapper {
+    display: grid;
+    grid-template-rows: 280px 1fr 150px;
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+}
+
+#header, #footer {
+    grid-column: 1 / 3;
+}
+
+a:link, a:hover, a:active, a:visited {
+    color: #333;
+    text-decoration: none;
+}
+
+table.table {
+    border-collapse: collapse;
+    border: 1px solid #DDD;
+}
+
+table.table > thead > tr {
+    background-color: #FFF;
+}
+
+table.table > thead th {
+    padding: 10px;
+    color: #333;
+}
+
+table.table th, table.table td {
+    border-right: 1px solid #F0F0F0;
+}
+
+table.table th:last-child,
+table.table td:last-child {
+    border-right: none;
+}
+
+table.table > tbody > tr:nth-child(odd) {
+    background-color: #F5F5F5;
+}
+
+table.table > tbody tr:hover {
+    background-color: #FAFAFA;
+}
+
+table.table > tbody td {
+    padding: 10px;
+    color: #333;
+}
+
+div.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 28px 28px 1fr 28px 28px;
+    row-gap: 10px;
+}
+div.right-align {
+    text-align: right;
+}
+ul.horizontal-list {
+   padding: 0px;
+   margin: 0px;
+}
+ul.horizontal-list li {
+   display: inline;
+}
+
+ul.page-nav {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}
+
+ul.page-nav > li {
+    display: inline-block;
+    padding: 10px;
+    color: #333;
+}
+
+ul.page-nav > li.active > a {
+    color: #F00;
+    font-weight: bold;
+}
+
+div.grid > div.replies {
+        display: grid;
+        grid-column: 1 / 3;
+    }
+
+    div.replies > .write-reply {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr 80px;
+        grid-template-rows: 1fr 40px;
+        row-gap: 10px;
+        column-gap: 10px;
+        align-items: center;
+    }
+
+    div.replies > .write-reply > textarea {
+        height: 150px;
+        display: grid;
+        grid-column: 1 / 3;
+    }
+
+    div.replies > .reply-items {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        row-gap: 10px;
+    }
+
+    pre.content {
+        margin: 0px;
+    }
